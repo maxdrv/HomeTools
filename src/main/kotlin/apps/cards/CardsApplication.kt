@@ -15,7 +15,7 @@ class CardsApplication(private val config: CardsConfiguration) {
 
         lookupDirs
             .map { dir -> dir to CardList(cardExtractor.extractCards(dir)) }
-            .forEach { (dir, cards) -> publisher.publish(dir.path.name + ".pdf", cards) }
+            .forEach { (dir, cards) -> publisher.publish(dir.path.name, cards) }
     }
 
 }

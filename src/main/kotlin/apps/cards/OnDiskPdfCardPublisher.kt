@@ -11,7 +11,9 @@ sealed interface CardPublisher {
 class OnDiskPdfCardPublisher(private val dest: TDir, private val printer: CardsPdfPrinter): CardPublisher {
 
     override fun publish(name: String, cards: CardList) {
-        printer.print(dest.path.resolve(name), cards)
+        val outputFilename = "$name.pdf"
+        val outputPath = dest.path.resolve(outputFilename)
+        printer.print(outputPath, cards)
     }
 
 }
