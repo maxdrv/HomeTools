@@ -22,7 +22,7 @@ public class CardsPdfPrinter {
     private static final int LINE_SIZE_HEADER = 16;
     private static final int LINE_SIZE = 10;
     private static final int IMPACT_MULTIPLIER = LINE_SIZE + 2;
-    private static final int MINIMAL_CARD_IMPACT = 10;
+    private static final int MIN_LIMIT_CARD_IMPACT = 8;
     private static final int AVG_CHARS_IN_LINE = 74;
     private static final int SINGLE_COLUMN = 1;
     private static final String CYRILLIC_FONT_NAME = "/fonts/DejaVuSans.ttf";
@@ -44,10 +44,10 @@ public class CardsPdfPrinter {
         document.open();
 
         for (Card card : cards.getContent()) {
-            String upperSideContent = card.getTopic() + "\n" + card.getQuestion();
+            String upperSideContent = card.getGroup() + "\n" + card.getTopic() + "\n" + card.getQuestion();
 
             long impact = Math.max(calculateImpact(upperSideContent), calculateImpact(card.getAnswer()));
-            long cellSize = Math.max(impact * IMPACT_MULTIPLIER, MINIMAL_CARD_IMPACT * IMPACT_MULTIPLIER);
+            long cellSize = Math.max(impact * IMPACT_MULTIPLIER, MIN_LIMIT_CARD_IMPACT * IMPACT_MULTIPLIER);
 
             PdfPCell upperCell = new PdfPCell(new Phrase(upperSideContent, HEADER_FONT));
             upperCell.setHorizontalAlignment(Element.ALIGN_CENTER);

@@ -28,10 +28,16 @@ class ObsidianCardExtractor {
 
     private fun createGroupName(dir: TDir, file: TFile): String {
         val inodes = mutableListOf<String>()
-        var curPath = file.path
+        if (file.path.parent == null) {
+            return ""
+        }
+        var curPath = file.path.parent
         while (curPath != dir.path) {
             inodes.add(curPath.name)
             curPath = curPath.parent ?: break
+        }
+        if (curPath.parent != null) {
+            inodes.add(curPath.name)
         }
         return inodes.reversed().joinToString(" - ")
     }

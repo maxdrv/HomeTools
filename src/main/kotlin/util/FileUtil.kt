@@ -20,13 +20,30 @@ class TFile(val path: Path) {
         return Files.readAllBytes(path)
     }
 
-    fun name(): String {
+    fun fullName(): String {
         return path.name
+    }
+
+    fun name(): String {
+        if (path.name.contains(".")) {
+            val extensionIndex = path.name.lastIndexOf(".")
+            return path.name.substring(0, extensionIndex)
+        }
+        return path.name
+    }
+
+    fun extension(): String {
+        if (path.name.contains(".")) {
+            val extensionIndex = path.name.lastIndexOf(".")
+            return path.name.substring(extensionIndex, path.name.length)
+        }
+        return ""
     }
 
     override fun toString(): String {
         return "$path"
     }
+
 }
 
 class TDir(val path: Path) {
