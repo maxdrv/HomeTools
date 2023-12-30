@@ -8,8 +8,6 @@ class ObsidianCardExtractor {
 
     private val cardPattern = "\n?\n"
 
-    private data class CardContent(val question: String, val answer: String)
-
     fun extractCards(dir: TDir): List<Card> {
         return dir.list()
             .map { file -> file to String(file.read()) }
@@ -42,7 +40,7 @@ class ObsidianCardExtractor {
         return inodes.reversed().joinToString(" - ")
     }
 
-    private fun parse(content: String): List<CardContent> {
+    internal fun parse(content: String): List<CardContent> {
         val cardsAsString = content.split("\n\n").filter { it.isNotBlank() }
         return cardsAsString
             .map { stringToCard(it) }
