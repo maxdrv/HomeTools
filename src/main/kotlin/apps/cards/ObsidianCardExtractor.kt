@@ -1,7 +1,6 @@
 package apps.cards
 
 import util.TDir
-import util.TFile
 import kotlin.io.path.name
 
 class ObsidianCardExtractor {
@@ -13,31 +12,14 @@ class ObsidianCardExtractor {
             .map { file -> file to String(file.read()) }
             .filter { (_, content) -> content.contains(cardPattern) }
             .flatMap { (file, content) ->
-                val group = createGroupName(dir, file)
-                val topic = file.name()
+                val topic = dir.path.name
                 try {
                     parse(content)
-                        .map { cardContent -> Card(group, topic, cardContent.question, cardContent.answer) }
+                        .map { cardContent -> Card(topic, cardContent.question, cardContent.answer) }
                 } catch (ex: Exception) {
                     throw RuntimeException("error processing file ${file.path}", ex)
                 }
             }
-    }
-
-    private fun createGroupName(dir: TDir, file: TFile): String {
-        val inodes = mutableListOf<String>()
-        if (file.path.parent == null) {
-            return ""
-        }
-        var curPath = file.path.parent
-        while (curPath != dir.path) {
-            inodes.add(curPath.name)
-            curPath = curPath.parent ?: break
-        }
-        if (curPath.parent != null) {
-            inodes.add(curPath.name)
-        }
-        return inodes.reversed().joinToString(" - ")
     }
 
     internal fun parse(content: String): List<CardContent> {
