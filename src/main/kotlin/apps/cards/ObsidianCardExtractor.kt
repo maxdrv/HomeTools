@@ -8,6 +8,7 @@ class ObsidianCardExtractor {
     private val cardPattern = "\n?\n"
 
     fun extractCards(dir: TDir): List<Card> {
+        var cnt = 1;
         return dir.list()
             .map { file -> file to String(file.read()) }
             .filter { (_, content) -> content.contains(cardPattern) }
@@ -15,7 +16,7 @@ class ObsidianCardExtractor {
                 val topic = dir.path.name
                 try {
                     parse(content)
-                        .map { cardContent -> Card(topic, cardContent.question, cardContent.answer) }
+                        .map { cardContent -> Card(topic, cnt++, cardContent.question, cardContent.answer) }
                 } catch (ex: Exception) {
                     throw RuntimeException("error processing file ${file.path}", ex)
                 }

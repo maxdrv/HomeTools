@@ -44,7 +44,7 @@ public class CardsPdfPrinter {
         document.open();
 
         for (Card card : cards.getContent()) {
-            String upperSideContent = card.getTopic() + "\n" + card.getQuestion();
+            String upperSideContent = card.getTopic() + "\n" + card.getNum() + ". " + card.getQuestion();
 
             long impact = Math.max(calculateImpact(upperSideContent), calculateImpact(card.getAnswer()));
             long cellSize = Math.max(impact * IMPACT_MULTIPLIER, MIN_LIMIT_CARD_IMPACT * IMPACT_MULTIPLIER);
