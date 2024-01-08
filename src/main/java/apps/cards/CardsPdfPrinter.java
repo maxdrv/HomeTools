@@ -23,7 +23,7 @@ public class CardsPdfPrinter {
     private static final int LINE_SIZE_HEADER = 16;
     private static final int LINE_SIZE = 10;
     private static final int IMPACT_MULTIPLIER = LINE_SIZE + 2;
-    private static final int MIN_LIMIT_CARD_IMPACT = 8;
+    private static final int MIN_LIMIT_CARD_IMPACT = 6;
     private static final int AVG_CHARS_IN_LINE = 74;
     private static final int SINGLE_COLUMN = 1;
     private static final String CYRILLIC_FONT_NAME = "/fonts/DejaVuSans.ttf";
