@@ -8,7 +8,6 @@ class ObsidianCardExtractor {
     private val cardPattern = "\n?\n"
 
     fun extractCards(dir: TDir): List<Card> {
-        var cnt = 1;
         return dir.list()
             .map { file -> file to String(file.read()) }
             .filter { (_, content) -> content.contains(cardPattern) }
@@ -16,7 +15,7 @@ class ObsidianCardExtractor {
                 val topic = dir.path.name
                 try {
                     parse(content)
-                        .map { cardContent -> Card(topic, cnt++, cardContent.question, cardContent.answer) }
+                        .map { cardContent -> Card(topic, cardContent.question, cardContent.answer) }
                 } catch (ex: Exception) {
                     throw RuntimeException("error processing file ${file.path}", ex)
                 }
@@ -31,11 +30,15 @@ class ObsidianCardExtractor {
     }
 
     private fun stringToCard(content: String): CardContent {
-        val split = content.split(cardPattern)
-        val question = split[0].trim()
-        val answerCandidate = split[1]
-        val noTrailingMeta = removeTrailingMeta(answerCandidate)
-        return CardContent(question, noTrailingMeta.trim())
+        try {
+            val split = content.split(cardPattern)
+            val question = split[0].trim()
+            val answerCandidate = split[1]
+            val noTrailingMeta = removeTrailingMeta(answerCandidate)
+            return CardContent(question, noTrailingMeta.trim())
+        } catch (ex: Exception) {
+            throw RuntimeException("error in $content", ex)
+        }
     }
 
     private fun removeTrailingMeta(answer: String): String {
@@ -45,4 +48,5 @@ class ObsidianCardExtractor {
         val metaIndex = answer.indexOf("<!--")
         return answer.removeRange(metaIndex, answer.length)
     }
+
 }

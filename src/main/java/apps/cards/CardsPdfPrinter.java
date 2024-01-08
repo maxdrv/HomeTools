@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -43,8 +44,9 @@ public class CardsPdfPrinter {
         PdfWriter.getInstance(document, Files.newOutputStream(file));
         document.open();
 
-        for (Card card : cards.getContent()) {
-            String upperSideContent = card.getTopic() + "\n" + card.getNum() + ". " + card.getQuestion();
+        List<Card> content = cards.getContent();
+        for (Card card : content) {
+            String upperSideContent = card.getTopic() + "\n" + card.getQuestion();
 
             long impact = Math.max(calculateImpact(upperSideContent), calculateImpact(card.getAnswer()));
             long cellSize = Math.max(impact * IMPACT_MULTIPLIER, MIN_LIMIT_CARD_IMPACT * IMPACT_MULTIPLIER);
