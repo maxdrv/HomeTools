@@ -20,6 +20,10 @@ class TFile(val path: Path) {
         return Files.readAllBytes(path)
     }
 
+    fun lines(): List<String> {
+        return Files.readAllLines(path)
+    }
+
     fun fullName(): String {
         return path.name
     }

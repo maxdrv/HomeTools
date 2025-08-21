@@ -12,7 +12,7 @@ class CardsApplication(private val config: CardsConfiguration) {
         val dest = TDir(Paths.get(config.destPath))
         val lookupDirs = config.lookupPaths.map { dirPath: String -> TDir(Paths.get(dirPath)) }
         val cardExtractor = ObsidianCardExtractor()
-        val publisher = OnDiskPdfCardPublisher(dest, CardsPdfPrinter())
+        val publisher = OnDiskPdfCardPublisher(dest, CardsPdfPrinter(config.cardUIType))
 
         lookupDirs
             .map { dir -> dir to CardList(cardExtractor.extractCards(dir)) }
