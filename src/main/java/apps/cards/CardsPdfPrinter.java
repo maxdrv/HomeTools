@@ -42,22 +42,32 @@ public class CardsPdfPrinter {
     }
 
     public void print(Path dest, CardList cards) {
+        Document document = null;
         try {
+            document = new Document();
+            PdfWriter.getInstance(document, Files.newOutputStream(dest));
+            document.open();
+
             switch (cardUIType) {
-                case QUESTION: printQuestions(dest, cards); break;
-                case TRANSLATION: printTranslations(dest, cards); break;
+                case QUESTION: printQuestions(document, cards); break;
+                case TRANSLATION: printTranslation(document, cards); break;
+                case TRANSLATION_V2: printTranslationsV2(document, cards); break;
                 default: throw new RuntimeException("NOT IMPLEMENTED TYPE OF UI FOR CARDS " + cardUIType);
             }
         } catch (IOException | DocumentException ex) {
             throw new RuntimeException(ex);
+        } finally {
+            if (document != null) {
+                document.close();
+            }
         }
     }
 
-    private void printTranslations(Path file, CardList cards) throws IOException, DocumentException {
-        Document document = new Document();
-        PdfWriter.getInstance(document, Files.newOutputStream(file));
-        document.open();
+    private void printTranslationsV2(Document document, CardList cards) throws IOException, DocumentException {
 
+    }
+
+    private void printTranslation(Document document, CardList cards) throws DocumentException {
         List<TwoCells> firstPart = new ArrayList<>();
         List<TwoCells> secondPart = new ArrayList<>();
 
@@ -79,10 +89,8 @@ public class CardsPdfPrinter {
                     }
                 });
 
-
         addTable(document, firstPart, 3);
         addTable(document, secondPart, 2);
-        document.close();
     }
 
     private void addTable(Document document, List<TwoCells> content, int amountOfColumns) throws DocumentException {
@@ -101,11 +109,7 @@ public class CardsPdfPrinter {
         }
     }
 
-    private void printQuestions(Path file, CardList cards) throws IOException, DocumentException {
-        Document document = new Document();
-        PdfWriter.getInstance(document, Files.newOutputStream(file));
-        document.open();
-
+    private void printQuestions(Document document, CardList cards) throws IOException, DocumentException {
         List<Card> content = cards.getContent();
         for (Card card : content) {
             String upperSideContent = card.getTopic() + "\n" + card.getQuestion();
@@ -130,8 +134,6 @@ public class CardsPdfPrinter {
             document.add(table);
             document.add(new DottedLineSeparator());
         }
-
-        document.close();
     }
 
     private static long calculateImpact(String text) {

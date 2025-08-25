@@ -3,6 +3,7 @@ package apps.cards;
 public enum CardUIType {
 
     QUESTION,
-    TRANSLATION
+    TRANSLATION,
+    TRANSLATION_V2
 
 }
