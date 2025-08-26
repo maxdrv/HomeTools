@@ -1,6 +1,10 @@
 package apps.cards
 
 import apps.CardsConfiguration
+import apps.cards.parser.CardParser
+import apps.cards.parser.FlashCardStyleParser
+import apps.cards.parser.OldParser
+import apps.cards.parser.ParserType
 import util.TDir
 import java.math.BigInteger
 import java.nio.file.Paths
@@ -11,12 +15,19 @@ class CardsApplication(private val config: CardsConfiguration) {
     fun run() {
         val dest = TDir(Paths.get(config.destPath))
         val lookupDirs = config.lookupPaths.map { dirPath: String -> TDir(Paths.get(dirPath)) }
-        val cardExtractor = ObsidianCardExtractor()
+        val cardExtractor = ObsidianCardExtractor(parser(config.parser))
         val publisher = OnDiskPdfCardPublisher(dest, CardsPdfPrinter(config.cardUIType))
 
         lookupDirs
             .map { dir -> dir to CardList(cardExtractor.extractCards(dir)) }
             .forEach { (dir, cards) -> publisher.publish(dir.path.name, orderCards(cards)) }
+    }
+
+    private fun parser(parserType: ParserType): CardParser {
+        return when (parserType) {
+            ParserType.FLASH_CARD_STYLE -> FlashCardStyleParser()
+            ParserType.OLD -> OldParser()
+        }
     }
 
     private fun orderCards(cards: CardList): CardList {

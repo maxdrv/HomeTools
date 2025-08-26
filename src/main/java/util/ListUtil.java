@@ -1,7 +1,9 @@
 package util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ListUtil {
 
@@ -24,6 +26,41 @@ public class ListUtil {
         }
 
         return partitions;
+    }
+
+    public static <T> List<List<T>> listsOfSize(List<T> input, int size, Supplier<T> emptyElementSupplier) {
+        List<List<T>> lists = new ArrayList<>();
+        if (input.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        Iterator<T> iterator = input.iterator();
+
+        int cnt = 1;
+        List<T> list = new ArrayList<>();
+        while (iterator.hasNext()) {
+            T element = iterator.next();
+            list.add(element);
+
+            if (cnt == size) {
+                cnt = 1;
+                lists.add(list);
+                list = new ArrayList<>();
+            } else {
+                cnt++;
+            }
+        }
+        if (cnt == 1) {
+            return lists;
+        }
+
+        for (int i = cnt; i < size + 1; i++) {
+            T emptyElement = emptyElementSupplier.get();
+            list.add(emptyElement);
+        }
+        lists.add(list);
+
+        return lists;
     }
 
 }

@@ -1,9 +1,10 @@
-package apps.cards
+package apps.cards.parser
 
+import apps.cards.CardContent
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
-class ObsidianCardExtractorTest {
+class OldParserTest {
 
     @Test
     fun `extract cards from obsidian md document`() {
@@ -25,8 +26,8 @@ class ObsidianCardExtractorTest {
             
         """.trimIndent()
 
-        val extractor = ObsidianCardExtractor()
-        val actual = extractor.parse(content)
+        val parser = OldParser()
+        val actual = parser.parse(content)
 
         val expected = listOf(
             CardContent("question1", "answer1"),
